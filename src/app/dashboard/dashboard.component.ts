@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
         <div class="col-md-4 mb-5">
           <div class="card shadow-effect">
             <div class="card-body text-center bg-secondary-theme">
-              <h1><span class="fa-solid fa-clipboard-list"></span></h1>
+              <h1 class="mt-3 text-theme-primary"><i class="bi bi-clipboard-data-fill"></i></h1>
               <h2 class="text-theme-primary">Category</h2>
               <p>Manage Your Category Details Here.</p>
             </div>
