@@ -87,7 +87,7 @@ import { Category } from '../models/category';
                         Edit
                       </button>
                       <button
-                        class="btn btn-sm btn-danger ml-1"
+                        class="btn btn-sm btn-danger ml-2"
                         (click)="onDelete(category)"
                       >
                         Delete

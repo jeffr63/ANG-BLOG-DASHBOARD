@@ -6,7 +6,16 @@ export const APP_ROUTES: Routes = [
   {
     path: 'categories',
     title: 'Categories',
-    loadComponent: () =>
-      import('./categories/categories.component'),
+    loadComponent: () => import('./categories/categories.component'),
+  },
+  {
+    path: 'posts',
+    title: 'Posts',
+    loadComponent: () => import('./posts/all-posts/all-posts.component'),
+  },
+  {
+    path: 'posts/new',
+    title: 'New Post',
+    loadComponent: () => import('./posts/new-post/new-post.component'),
   },
 ];
