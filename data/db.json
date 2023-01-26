@@ -17,8 +17,12 @@
   ],
   "categories": [
     {
-      "id": 1,
-      "category": "AngularJS"
+      "category": "Angular",
+      "id": 1
+    },
+    {
+      "category": "React",
+      "id": 2
     }
   ]
 }
