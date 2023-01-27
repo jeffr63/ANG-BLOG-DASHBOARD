@@ -4,6 +4,9 @@ const entityMetadata: EntityMetadataMap = {
   Categories: {
     sortComparer: sortByCategory,
   },
+  Posts: {
+    sortComparer: sortByTitle,
+  },
   Users: {
     sortComparer: sortByName,
   },
@@ -29,6 +32,7 @@ export function sortByTitle(
 
 const pluralNames = {
   Categories: 'Categories',
+  Posts: 'Posts',
   Users: 'Users',
 };
 
