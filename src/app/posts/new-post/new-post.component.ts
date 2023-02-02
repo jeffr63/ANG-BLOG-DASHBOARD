@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 
 import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { Category } from 'src/app/models/category';
@@ -24,8 +24,16 @@ import { PostsService } from 'src/app/services/posts.service';
     <div class="container">
       <div class="row">
         <div class="col-md-12 text-center">
-          <h3 class="text-theme-primary">Add New Post</h3>
-          <p class="mb-5">You can add your new post here.</p>
+          <h3 class="text-theme-primary">
+            {{ formStatus == 'New' ? 'Add New' : 'Edit' }} Post
+          </h3>
+          <p class="mb-5">
+            {{
+              formStatus == 'New'
+                ? 'You can add your new post here.'
+                : 'You can edit your post here.'
+            }}
+          </p>
         </div>
       </div>
       <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
@@ -203,7 +211,7 @@ import { PostsService } from 'src/app/services/posts.service';
 
           <div class="col-md-12 text-center mt-3 mb-5">
             <button class="btn btn-info bg-theme" [disabled]="postForm.invalid">
-              Save Post
+              {{ formStatus == 'New' ? 'Save' : 'Update' }} Post
             </button>
             <button class="btn btn-warning ml-3" routerLink="/posts">
               Back to Post
@@ -230,9 +238,10 @@ import { PostsService } from 'src/app/services/posts.service';
   ],
 })
 export default class NewPostComponent implements OnInit, OnDestroy {
-  permalink = '';
   defaultImgPlaceholder = '/assets/placeholder-image.jpg';
   imgsrc: any = this.defaultImgPlaceholder;
+  formStatus = 'New';
+  permalink = '';
   selectedImg: any = '';
   componentIsDestroyed = new Subject<boolean>();
   categories: Category[] = [];
@@ -255,7 +264,9 @@ export default class NewPostComponent implements OnInit, OnDestroy {
   constructor(
     private categoriesService: CategoriesService,
     private postsService: PostsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(10)]],
@@ -264,6 +275,24 @@ export default class NewPostComponent implements OnInit, OnDestroy {
       category: ['', Validators.required],
       postImg: ['', Validators.required],
       content: ['', Validators.required],
+    });
+
+    this.route.queryParams.subscribe((value) => {
+      this.postsService
+        .getByKey(value['id'])
+        .pipe(take(1))
+        .subscribe((post: Post) => {
+          this.postForm.patchValue({
+            id: post.id,
+            title: post.title,
+            permalink: post.title.replace(/\s/g, '-'),
+            excerpt: post.excerpt,
+            content: post.content,
+            category: `${post.category.categoryId}-${post.category.category}`,
+          });
+          this.imgsrc = post.postImg;
+          this.formStatus = 'Edit';
+        });
     });
   }
 
@@ -297,6 +326,7 @@ export default class NewPostComponent implements OnInit, OnDestroy {
     this.postsService.saveData(postData);
     this.postForm.reset();
     this.imgsrc = this.defaultImgPlaceholder;
+    this.router.navigate(['/posts']);
   }
 
   onTitleChange(e: any) {

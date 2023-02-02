@@ -1,11 +1,15 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';
+
+import { Subject, takeUntil, tap } from 'rxjs';
+
+import { Post } from 'src/app/models/post';
+import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
   selector: 'app-all-posts',
   standalone: true,
-  imports: [CommonModule, RouterLink],
   template: `
     <div class="container">
       <div class="row">
@@ -25,6 +29,49 @@ import { RouterLink } from '@angular/router';
           </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card shadow-effect">
+            <div class="card-body">
+              <table class="table row-border hover">
+                <thead>
+                  <tr>
+                    <th width="10">No</th>
+                    <th width="200">Post Image</th>
+                    <th width="200">Title</th>
+                    <th width="300">Excerpt</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let post of posts; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                      <img src="{{ post.postImg }}" class="img img-fluid" />
+                    </td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.excerpt }}</td>
+                    <td>{{ post.category.category }}</td>
+                    <td>{{ post.createdAt | date }}</td>
+                    <td>
+                      <button
+                        class="btn btn-sm btn-warning"
+                        routerLink="/posts/new"
+                        [queryParams]="{ id: post.id }"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [
@@ -34,5 +81,28 @@ import { RouterLink } from '@angular/router';
       }
     `,
   ],
+  imports: [CommonModule, RouterLink, NgFor],
 })
-export default class AllPostsComponent {}
+export default class AllPostsComponent implements OnInit, OnDestroy {
+  componentIsDestroyed = new Subject<boolean>();
+  posts: Post[] = [];
+  posts$ = this.postsService.entities$
+    .pipe(takeUntil(this.componentIsDestroyed))
+    .pipe(
+      tap((data) => {
+        this.posts = data;
+      })
+    )
+    .subscribe();
+
+  constructor(private postsService: PostsService) {}
+
+  ngOnInit() {
+    this.postsService.getAll();
+  }
+
+  ngOnDestroy(): void {
+    this.componentIsDestroyed.next(true);
+    this.componentIsDestroyed.complete();
+  }
+}
