@@ -18,4 +18,9 @@ export const APP_ROUTES: Routes = [
     title: 'New Post',
     loadComponent: () => import('./posts/new-post/new-post.component'),
   },
+  {
+    path: 'login',
+    title: 'Login',
+    loadComponent: () => import('./auth/login/login.component'),
+  },
 ];

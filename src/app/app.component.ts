@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './auth/auth.service';
 
 import { FooterComponent } from './layouts/footer/footer.component';
 import { HeaderComponent } from './layouts/header/header.component';
@@ -11,15 +12,9 @@ import { HeaderComponent } from './layouts/header/header.component';
   template: `
     <app-header></app-header>
 
-    <!-- <app-category-navbar></app-category-navbar> -->
-
     <div class="app-body">
       <router-outlet></router-outlet>
     </div>
-
-    <!-- <div class="container justifiy-content-center mt-5 mb-5">
-      <app-subscription-form></app-subscription-form>
-    </div> -->
 
     <app-footer></app-footer>
   `,
@@ -34,4 +29,10 @@ import { HeaderComponent } from './layouts/header/header.component';
 })
 export default class AppComponent {
   title = 'ANG-BLOG-DASHBOARD';
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authService.checkLogin();
+  }
 }

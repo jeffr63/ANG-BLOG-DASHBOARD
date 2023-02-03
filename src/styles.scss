@@ -35,7 +35,7 @@ body {
 }
 
 .bg-secondary-theme {
-  background-color: var(--secondary-color);
+  background-color: var(--secondary-color) !important;
 }
 
 .text-theme-primary {
@@ -43,6 +43,7 @@ body {
 }
 
 input[type='text'],
+input[type='password'],
 input[type='email'] {
   height: 60px;
   padding-left: 20px;
@@ -52,6 +53,5 @@ input[type='email'] {
 .button-theme {
   height: 50px;
   border: none;
-  font-size: 13px;
   background-color: var(--primary-color) !important;
 }
