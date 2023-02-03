@@ -81,12 +81,14 @@ import { Category } from '../models/category';
                     <td>{{ category.category }}</td>
                     <td>
                       <button
+                        type="button"
                         class="btn btn-sm btn-warning"
                         (click)="onEdit(category)"
                       >
                         Edit
                       </button>
                       <button
+                        type="button"
                         class="btn btn-sm btn-danger ml-2"
                         (click)="onDelete(category)"
                       >

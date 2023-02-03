@@ -40,10 +40,9 @@ import { PostsService } from 'src/app/services/posts.service';
                     <th width="10">No</th>
                     <th width="200">Post Image</th>
                     <th width="200">Title</th>
-                    <th width="300">Excerpt</th>
                     <th>Category</th>
                     <th>Date</th>
-                    <th>Actions</th>
+                    <th width="300">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -53,16 +52,39 @@ import { PostsService } from 'src/app/services/posts.service';
                       <img src="{{ post.postImg }}" class="img img-fluid" />
                     </td>
                     <td>{{ post.title }}</td>
-                    <td>{{ post.excerpt }}</td>
                     <td>{{ post.category.category }}</td>
                     <td>{{ post.createdAt | date }}</td>
                     <td>
                       <button
+                        type="button"
                         class="btn btn-sm btn-warning"
                         routerLink="/posts/new"
                         [queryParams]="{ id: post.id }"
                       >
                         Edit
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-danger ml-2"
+                        (click)="deletePost(post.id)"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        *ngIf="!post.isFeatured"
+                        type="button"
+                        class="btn btn-sm btn-success ml-2"
+                        (click)="onFeatured(post, true)"
+                      >
+                        Mark Featured
+                      </button>
+                      <button
+                        *ngIf="post.isFeatured"
+                        type="button"
+                        class="btn btn-sm btn-info ml-2"
+                        (click)="onFeatured(post, false)"
+                      >
+                        Remove Featured
                       </button>
                     </td>
                   </tr>
@@ -104,5 +126,21 @@ export default class AllPostsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentIsDestroyed.next(true);
     this.componentIsDestroyed.complete();
+  }
+
+  deletePost(id: number | null | undefined) {
+    if (id) {
+      this.postsService.deleteData(id);
+    }
+  }
+
+  onFeatured(post: Post, isFeatured: boolean) {
+    if (post) {
+      const postData = {
+        ...post,
+        isFeatured: isFeatured,
+      };
+      this.postsService.update(postData);
+    }
   }
 }
