@@ -337,7 +337,7 @@ export default class NewPostComponent implements OnInit, OnDestroy {
         },
         postImg: `/assets/images/${imagePath[2]}`,
         content: this.postForm.value['content'],
-        isFeatured: false,
+        isFeatured: 'false',
         views: 0,
         status: 'new',
         createdAt: new Date(),

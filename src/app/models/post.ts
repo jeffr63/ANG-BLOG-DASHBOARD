@@ -8,7 +8,7 @@ export interface Post {
   };
   postImg: string;
   content: string;
-  isFeatured: boolean;
+  isFeatured: string;
   views: number;
   status: string;
   createdAt: Date;

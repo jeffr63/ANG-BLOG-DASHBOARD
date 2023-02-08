@@ -71,7 +71,7 @@ import { PostsService } from 'src/app/services/posts.service';
                         Delete
                       </button>
                       <button
-                        *ngIf="!post.isFeatured"
+                        *ngIf="post.isFeatured == 'false'"
                         type="button"
                         class="btn btn-sm btn-success ml-2"
                         (click)="onFeatured(post, true)"
@@ -79,7 +79,7 @@ import { PostsService } from 'src/app/services/posts.service';
                         Mark Featured
                       </button>
                       <button
-                        *ngIf="post.isFeatured"
+                        *ngIf="post.isFeatured == 'true'"
                         type="button"
                         class="btn btn-sm btn-info ml-2"
                         (click)="onFeatured(post, false)"
@@ -136,9 +136,13 @@ export default class AllPostsComponent implements OnInit, OnDestroy {
 
   onFeatured(post: Post, isFeatured: boolean) {
     if (post) {
+      let featured = 'false';
+      if (isFeatured) {
+        featured = 'true';
+      }
       const postData = {
         ...post,
-        isFeatured: isFeatured,
+        isFeatured: featured,
       };
       this.postsService.update(postData);
     }
