@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 class AuthToken {
   token: string = '';
@@ -18,7 +20,11 @@ export class AuthService {
   public isAdmin = false;
   public isAuthenticated = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   login(email: string, password: string) {
     return this.http
@@ -87,6 +93,10 @@ export class AuthService {
   }
 
   isLoggedIn() {
+    if (!this.isAuthenticated) {
+      this.toastr.warning('You must login to access this page...');
+      this.router.navigate(['/login']);
+    }
     return this.isAuthenticated;
   }
 
