@@ -34,4 +34,10 @@ export const APP_ROUTES: Routes = [
     title: 'Login',
     loadComponent: () => import('./auth/login/login.component'),
   },
+  {
+    path: 'subscribers',
+    title: 'Subscribers',
+    loadComponent: () => import('./subscribers/subscribers.component'),
+    canActivate: [() => inject(AuthService).isLoggedIn()],
+  },
 ];
